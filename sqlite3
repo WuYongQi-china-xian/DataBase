@@ -1,0 +1,21 @@
+1.判断数据库是否损坏的命令
+PRAGMA integrity_check;
+2.进入数据库
+sqlite3 数据库文件
+3.查看数据库中的所有表
+.tables
+4.查查表的结构
+.schema 表名
+5.显示字段名称
+.head on
+6.导出数据库某个表：
+.output table_name.sql
+.dump table_name
+7.导出全部表：
+.dump
+8.导入数据表：
+.read table_name.sql
+9.不进入sqlie3 直接 执行导出数据库所有表的存储过程
+sqlite3 db/boardsprofile.db ".dump" > /var/ftp/profile.sq
+10.不进入sqlie3 直接 执行读出所有表的存储过程到数据库
+sqlite3 test.db ".read /var/ftp/profile.sql"  
