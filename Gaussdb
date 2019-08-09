@@ -1,0 +1,56 @@
+1.GaussDB配置文件
+    /opt/gauss/data/{DB}/postgresql.conf
+        查看gauss端口号
+        postgresql.conf include /opt/gauss/gauss_nce_e.conf，/opt/gauss/gauss_product.conf两个配置文件
+        查看guass DB性能配置
+    /opt/gauss/data/{DB}/pg_hba.conf
+        查看guass DB 内数据库，以及访问数据库的权限
+    /opt/gauss/data/CampusCommon-0-1019/postmaster.opts
+         查看数据库启动参数
+
+2.连接数据库
+    1) su - dbuser
+    2) source appgsdb.bashrc //导出可执行文件路径，LIB等
+    3) gsql -d postgres -U dbuser -W Admin@123 -p 32084 -h 192.168.6.36 //默认使用postgres数据库
+
+3.常用命令
+   1） \l 查看当前实例下所有数据库列表，q退出列表 \q退出客户端
+   2）\c dbname 切换到指定的数据库
+   3）\dt 查看所有数据库表
+   4）\d tablename 查看表结构
+   5）\di tablename 查看表索引
+   6）\encoding 设置客户端编码
+   7）\h 显示客户端所有命令
+   8）gs_dump 数据导入导出
+        gs_dump postgres -U dbuser -W Admin@123 -p 32084 --pg-format > bam_a.dmp
+        整库导出，导出 postgres 所有数据
+        gs_dump CAMPUSBASEDB -U dbuser -W Admin@123 -p 5432 --pg-format -t      
+
+        TAB_BP_DIAGNOSE_LOG_NODE > TAB_BP_DIAGNOSE_LOG_NODE.dmp
+        -t 选项表示只导出表 TAB_BP_DIAGNOSE_LOG_NODE
+  9）gs_ctl start/stop/restart/status/reload 
+        gs_ctl -D "/opt/gauss/data/CampusCommon-0-1019" restart #-D 为数据库路径
+  10)gs_guc reload -c log_statement='all'​
+  11）\dt 查看当前用户的所有数据库表
+  12）\dp查看所有数据库表
+  13）\dn查看所有schema
+
+    动态修改配置参数，修改后对当前会话和后续会话都有效，无需重启 GaussDB。
+    
+实用例子
+--删库
+\c postgres;
+drop database aiep_dataset;
+--删用户
+drop user dataset cascade; 
+--创库
+create database aiep_dataset;
+--配置连接数
+update pg_database set datconnlimit=30 where datname='AIEP_DATASET';
+--进库创用户并授权
+\c aiep_dataset;
+create user dataset with password 'xxxxx';
+grant select on all tables in schema pg_catalog to dataset;
+alter role dataset connection limit 30;
+--退出
+\q
