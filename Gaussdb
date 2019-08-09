@@ -38,6 +38,8 @@
     动态修改配置参数，修改后对当前会话和后续会话都有效，无需重启 GaussDB。
     
 实用例子
+进入数据库
+gsql -d aiep_dlk -p 15432
 --删库
 \c postgres;
 drop database aiep_dataset;
